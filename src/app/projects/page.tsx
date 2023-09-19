@@ -29,7 +29,7 @@ export default function Projects() {
         <h2 className={`${roboto_mono.className} mb-2 text-xl`}>My projects, a history</h2>
         <p className='text-gray-800 dark:text-gray-200'>
           I have worked on a variety of web related projects; personally, at university, and at
-          work. To simplify the list, I've made a timeline to help see how I have developed and
+          work. To simplify the list, I have made a timeline to help see how I have developed and
           learnt new web development stacks and frameworks.
         </p>
         <div className='relative mt-4 after:absolute after:bottom-0 after:left-1/2 after:top-0 after:-ml-[1px] after:w-[2px] after:rounded after:bg-gray-600 after:dark:bg-white'>
@@ -197,7 +197,10 @@ export default function Projects() {
               href: 'https://mhiebl.com',
             },
           ].map(({ date, title, description, icons, code, href }) => (
-            <div className='group relative flex w-1/2 flex-col gap-1 px-6 py-2 odd:items-end odd:text-right even:left-1/2'>
+            <div
+              key={crypto.randomUUID()}
+              className='group relative flex w-1/2 flex-col gap-1 px-6 py-2 odd:items-end odd:text-right even:left-1/2'
+            >
               <p className={`${roboto_mono.className} text-sm text-gray-600 dark:text-gray-400`}>
                 {date}
               </p>

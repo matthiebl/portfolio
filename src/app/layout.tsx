@@ -9,17 +9,13 @@ export const metadata: Metadata = {
   description: "matthiebl's site",
 }
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang='en'>
       <body className={inter.className + ' dark:bg-slate-950'}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <ThemeProvider attribute='class' defaultTheme='system' enableSystem>
           <Navbar />
-          <div className="flex justify-center w-full">{children}</div>
+          <div className='flex justify-center w-full'>{children}</div>
         </ThemeProvider>
       </body>
     </html>

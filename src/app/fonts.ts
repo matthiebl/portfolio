@@ -1,8 +1,8 @@
-import { Inter, Roboto_Mono } from 'next/font/google'
+import { Roboto, Roboto_Mono } from 'next/font/google'
 
-export const inter = Inter({
+export const roboto = Roboto({
   subsets: ['latin'],
-  display: 'swap',
+  weight: '400',
 })
 
 export const roboto_mono = Roboto_Mono({

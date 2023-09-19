@@ -30,7 +30,7 @@ export function Navbar({}: {}) {
           className='rounded p-[5px] sm:p-[7px]'
           onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
         >
-          {theme === 'light' ? (
+          {theme === 'dark' ? (
             <svg
               xmlns='http://www.w3.org/2000/svg'
               fill='none'

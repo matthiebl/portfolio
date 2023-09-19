@@ -8,12 +8,12 @@ export function Navbar({}: {}) {
   const { theme, setTheme } = useTheme()
 
   return (
-    <nav className={`${roboto_mono.className} w-full p-5 flex justify-between items-center`}>
-      <Link href='/' className='rounded flex gap-4 py-0.5 pr-1'>
+    <nav className={`${roboto_mono.className} flex w-full items-center justify-between p-5`}>
+      <Link href='/' className='flex gap-4 rounded py-0.5 pr-1'>
         <Image src='/matthiebl.png' alt='profile icon' width={28} height={28} />
-        <h1 className='text-lg hidden sm:block'>matthiebl</h1>
+        <h1 className='hidden text-lg sm:block'>matthiebl</h1>
       </Link>
-      <div className='flex gap-4 items-center'>
+      <div className='flex items-center gap-4'>
         {[
           { href: '/projects', text: 'Projects' },
           { href: '/about', text: 'About' },
@@ -21,7 +21,7 @@ export function Navbar({}: {}) {
           <Link
             key={crypto.randomUUID()}
             href={href}
-            className='px-2 py-[5px] rounded text-sm sm:text-base'
+            className='rounded px-2 py-[5px] text-sm sm:text-base'
           >
             {text}
           </Link>
@@ -37,7 +37,7 @@ export function Navbar({}: {}) {
               viewBox='0 0 24 24'
               strokeWidth={1.5}
               stroke='currentColor'
-              className='w-5 h-5'
+              className='h-5 w-5'
             >
               <path
                 strokeLinecap='round'
@@ -52,7 +52,7 @@ export function Navbar({}: {}) {
               viewBox='0 0 24 24'
               strokeWidth={1.5}
               stroke='currentColor'
-              className='w-5 h-5'
+              className='h-5 w-5'
             >
               <path
                 strokeLinecap='round'

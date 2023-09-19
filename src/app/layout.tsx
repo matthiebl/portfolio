@@ -15,7 +15,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={inter.className + ' dark:bg-slate-950'}>
         <ThemeProvider attribute='class' defaultTheme='system' enableSystem>
           <Navbar />
-          <div className='flex justify-center w-full'>{children}</div>
+          <div className='flex w-full justify-center'>{children}</div>
         </ThemeProvider>
       </body>
     </html>

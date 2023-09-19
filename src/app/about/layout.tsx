@@ -1,8 +1,8 @@
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'matthiebl | Projects',
-  description: "matthiebl's projects",
+  title: 'matthiebl | About',
+  description: "matthiebl's about me",
 }
 
 export default function Layout({ children }: { children: React.ReactNode }) {

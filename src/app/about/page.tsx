@@ -1,3 +1,3 @@
 export default function About() {
-  return <main className='max-w-screen-lg w-full'>About</main>
+  return <main className='w-full max-w-screen-lg'>About</main>
 }

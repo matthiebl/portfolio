@@ -18,7 +18,7 @@ export function Navbar({}: {}) {
       className={`${roboto_mono.className} w-full p-5 flex justify-between items-center`}
     >
       <Link href="/" className="rounded flex gap-4 py-0.5 pr-1">
-        <Image src="/icon.png" alt="profile icon" width={28} height={28} />
+        <Image src="/matthiebl.png" alt="profile icon" width={28} height={28} />
         <h1 className="text-lg hidden sm:block">matthiebl</h1>
       </Link>
       <div className="flex gap-4 items-center">
@@ -27,6 +27,7 @@ export function Navbar({}: {}) {
           { href: '/about', text: 'About' },
         ].map(({ href, text }) => (
           <Link
+            key={crypto.randomUUID()}
             href={href}
             className="px-2 py-[5px] rounded text-sm sm:text-base"
           >

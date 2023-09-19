@@ -21,7 +21,7 @@ export default function Home() {
         </p>
       </section>
 
-      <section className="mt-14 flex flex-col gap-5">
+      <section className="my-14 flex flex-col gap-5">
         {[
           { href: '/projects', text: 'See my projects' },
           { href: '/about', text: 'More about me' },
@@ -29,7 +29,13 @@ export default function Home() {
           <Link
             key={crypto.randomUUID()}
             href={href}
-            className="group w-full rounded-lg border sm:border-0 border-gray-300 px-4 py-3 duration-300 flex items-center gap-2 text-gray-600 sm:p-0 hover:shadow-md sm:hover:shadow-none hover:border-gray-400 hover:text-gray-900"
+            className={`
+              group w-full rounded-lg border px-4 py-3 duration-300 flex items-center gap-2
+              sm:p-0 sm:border-0
+              hover:shadow-md sm:hover:shadow-none
+              border-gray-300 hover:border-gray-400 dark:border-gray-400 dark:hover:border-gray-100
+              text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100
+            `}
           >
             {`${text} `}
             <svg
@@ -38,7 +44,7 @@ export default function Home() {
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="w-5 h-5 duration-300 group-hover:translate-x-10"
+              className="w-5 h-5 duration-300 group-hover:translate-x-10 group-hover:-rotate-0 sm:group-hover:translate-x-0 sm:group-hover:-rotate-45"
             >
               <path
                 strokeLinecap="round"

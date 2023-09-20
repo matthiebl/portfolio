@@ -18,7 +18,7 @@ export function TimelineSection({}: {}) {
         {projects.map(({ date, title, description, icons, code, href }) => (
           <div
             key={crypto.randomUUID()}
-            className='group relative z-10 mb-10 flex flex-col gap-1 rounded-2xl border-[2px] border-gray-600 bg-white px-6 py-6 dark:border-white dark:bg-slate-950 md:mb-0 md:w-1/2 md:border-0 md:border-transparent md:py-2 md:odd:items-end md:odd:text-right md:even:left-1/2'
+            className='group relative z-10 mb-10 flex flex-col gap-1 rounded-2xl border-[2px] border-gray-600 bg-white px-6 py-6 dark:border-white dark:bg-slate-900 md:mb-0 md:w-1/2 md:border-0 md:border-transparent md:py-2 md:odd:items-end md:odd:text-right md:even:left-1/2'
           >
             <p className={`${roboto_mono.className} text-sm text-gray-600 dark:text-gray-400`}>
               {date}

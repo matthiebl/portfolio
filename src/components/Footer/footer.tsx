@@ -5,7 +5,7 @@ import { roboto_mono } from '@/app/fonts'
 
 export function Footer({}: {}) {
   return (
-    <footer className={`${roboto_mono.className} mt-auto flex w-full justify-center`}>
+    <footer className={`${roboto_mono.className} flex w-full justify-center`}>
       <div className='flex w-full max-w-screen-xl flex-wrap items-center justify-center gap-5 p-3 text-gray-500 sm:text-sm'>
         <span className='text-sm'>Matthew Hiebl 2023</span>
         <a

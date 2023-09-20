@@ -13,10 +13,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang='en'>
-      <body className={roboto.className + ' flex flex-col dark:bg-slate-950'}>
+      <body className={roboto.className + ' flex flex-col dark:bg-slate-900'}>
         <ThemeProvider attribute='class' defaultTheme='system' enableSystem>
           <Navbar />
-          <div className='flex w-full justify-center'>{children}</div>
+          <div className='flex w-full flex-1 justify-center'>{children}</div>
           <Footer />
         </ThemeProvider>
       </body>

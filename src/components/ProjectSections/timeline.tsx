@@ -9,16 +9,16 @@ export function TimelineSection({}: {}) {
   return (
     <section className='mb-16'>
       <h2 className={`${roboto_mono.className} mb-2 text-xl`}>My projects, a history</h2>
-      <p className='text-gray-700 dark:text-gray-300'>
+      <p className='text-sm text-gray-700 dark:text-gray-300'>
         I have worked on a variety of web related projects; personally, at university, and at work.
         To simplify the list of projects, I have made a timeline to help visualise my growth.
       </p>
-      <div className='relative mt-4 after:absolute after:bottom-0 after:left-1/2 after:top-0 after:-ml-[1px] after:w-[2px] after:rounded after:bg-gray-600 after:dark:bg-white'>
+      <div className='relative mt-4 after:absolute after:bottom-0 after:left-1/2 after:top-0 after:-ml-[1px] after:w-[2px] after:rounded after:bg-gray-600 after:dark:bg-white md:after:z-20'>
         <div className='mb-10 h-[1px] md:hidden' />
         {projects.map(({ date, title, description, icons, code, href }) => (
           <div
             key={crypto.randomUUID()}
-            className='group relative z-10 mb-10 flex flex-col gap-1 rounded-2xl border-[2px] bg-white px-6 py-6 dark:bg-slate-950 md:w-1/2 md:border-0 md:py-2 md:odd:items-end md:odd:text-right md:even:left-1/2'
+            className='group relative z-10 mb-10 flex flex-col gap-1 rounded-2xl border-[2px] border-gray-600 bg-white px-6 py-6 dark:border-white dark:bg-slate-950 md:mb-0 md:w-1/2 md:border-0 md:border-transparent md:py-2 md:odd:items-end md:odd:text-right md:even:left-1/2'
           >
             <p className={`${roboto_mono.className} text-sm text-gray-600 dark:text-gray-400`}>
               {date}

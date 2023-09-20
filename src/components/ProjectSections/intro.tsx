@@ -2,7 +2,7 @@ import { roboto_mono } from '@/app/fonts'
 
 export function IntroSection({}: {}) {
   return (
-    <section className='mb-16 text-gray-700 dark:text-gray-300'>
+    <section className='mb-16 text-sm text-gray-700 dark:text-gray-300'>
       <h2 className={`${roboto_mono.className} mb-2 text-xl text-black dark:text-white`}>
         What do I work on?
       </h2>

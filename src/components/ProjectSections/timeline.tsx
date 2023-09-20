@@ -14,20 +14,21 @@ export function TimelineSection({}: {}) {
         To simplify the list of projects, I have made a timeline to help visualise my growth.
       </p>
       <div className='relative mt-4 after:absolute after:bottom-0 after:left-1/2 after:top-0 after:-ml-[1px] after:w-[2px] after:rounded after:bg-gray-600 after:dark:bg-white'>
+        <div className='mb-10 h-[1px] md:hidden' />
         {projects.map(({ date, title, description, icons, code, href }) => (
           <div
             key={crypto.randomUUID()}
-            className='group relative flex w-1/2 flex-col gap-1 px-6 py-2 odd:items-end odd:text-right even:left-1/2'
+            className='group relative z-10 mb-10 flex flex-col gap-1 rounded-2xl border-[2px] bg-white px-6 py-6 dark:bg-slate-950 md:w-1/2 md:border-0 md:py-2 md:odd:items-end md:odd:text-right md:even:left-1/2'
           >
             <p className={`${roboto_mono.className} text-sm text-gray-600 dark:text-gray-400`}>
               {date}
             </p>
             <p className={`${roboto_mono.className} font-bold`}>{title}</p>
             <p className='text-sm text-gray-700 dark:text-gray-300'>{description}</p>
-            <div className='flex items-center gap-4 group-even:flex-row-reverse group-even:justify-end'>
+            <div className='mt-2 flex flex-row-reverse items-center gap-4 md:mt-0 md:flex-row md:group-even:flex-row-reverse md:group-even:justify-end'>
               {(code || href) && (
                 <>
-                  <div className='mt-1 flex items-center gap-2 text-2xl group-even:flex-row-reverse'>
+                  <div className='mt-1 flex flex-row-reverse items-center gap-2 text-2xl group-even:flex-row-reverse md:flex-row'>
                     {href && (
                       <a
                         href={href}
@@ -72,6 +73,7 @@ export function TimelineSection({}: {}) {
             </div>
           </div>
         ))}
+        <div className='h-[1px] md:hidden' />
       </div>
       <p className={`${roboto_mono.className} mt-3 text-center text-xl`}>Now</p>
     </section>

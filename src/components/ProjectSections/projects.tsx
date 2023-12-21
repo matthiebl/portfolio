@@ -146,7 +146,7 @@ export const projects = [
       { icon: <BiLogoFirebase />, tooltip: 'Firebase' },
     ],
     code: 'https://github.com/matthiebl/expense-app',
-    href: 'https://expense.mhiebl.com',
+    href: 'https://mhiebl-budget.web.app',
   },
   {
     date: 'Aug 2023',

@@ -11,11 +11,10 @@ export default function Home() {
           Matthew Hiebl
         </p>
         <p className='mb-5 text-3xl font-semibold text-gray-700 dark:text-gray-400 sm:mb-10 sm:text-5xl'>
-          Web Developer
+          Software Dev Engineer
         </p>
         <p className='text-gray-600 dark:text-gray-500 sm:w-9/12 md:w-7/12'>
-          I enjoy all aspects of web development and have a passion for turning ideas into usable
-          and responsive websites.
+          Dedicated to learning new technologies, improving customer experience, and solving modern problems for customers at scale.
         </p>
       </section>
 

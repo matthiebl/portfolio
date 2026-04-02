@@ -3,20 +3,17 @@ import {
   collection,
   deleteDoc,
   doc,
-  getDoc,
   getDocs,
   orderBy,
   query,
   serverTimestamp,
-  setDoc,
   updateDoc,
   where,
 } from 'firebase/firestore'
-import type { BlogPost, BlogPostImages, BlogPostInput } from '../types'
+import type { BlogPost, BlogPostInput } from '../types'
 import { db } from './firebase'
 
 const POSTS = 'blog_posts'
-const IMAGES = 'blog_post_images'
 
 // ── Posts ──────────────────────────────────────────────────────────────────
 
@@ -64,23 +61,5 @@ export async function updateBlogPost(
 }
 
 export async function deleteBlogPost(id: string): Promise<void> {
-  await Promise.all([
-    deleteDoc(doc(db, POSTS, id)),
-    deleteDoc(doc(db, IMAGES, id)),
-  ])
-}
-
-// ── Post images (cover only — fetched on post page) ────────────────────────
-
-export async function getBlogPostImages(id: string): Promise<BlogPostImages> {
-  const d = await getDoc(doc(db, IMAGES, id))
-  if (!d.exists()) return {}
-  return d.data() as BlogPostImages
-}
-
-export async function saveBlogPostImages(
-  id: string,
-  images: BlogPostImages,
-): Promise<void> {
-  await setDoc(doc(db, IMAGES, id), images, { merge: true })
+  await deleteDoc(doc(db, POSTS, id))
 }

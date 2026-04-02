@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { about } from '../../content'
 
 function GithubIcon({ className }: { className?: string }) {
   return (
@@ -26,18 +27,6 @@ function LinkedinIcon({ className }: { className?: string }) {
   )
 }
 
-const SKILLS = [
-  'TypeScript',
-  'React',
-  'Next.js',
-  'Vite',
-  'Tailwind CSS',
-  'Node.js',
-  'Firebase',
-  'Git',
-  'Python',
-  'SQL',
-]
 
 export function AboutSection() {
   const sectionRef = useRef<HTMLElement>(null)
@@ -69,34 +58,22 @@ export function AboutSection() {
       <div className="mx-auto max-w-7xl">
         <div className="reveal">
           <p className="font-mono text-xs font-semibold tracking-widest text-indigo-600 dark:text-indigo-400 uppercase mb-3">
-            About
+            {about.label}
           </p>
           <h2
             id="about-heading"
             className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-4xl mb-12"
           >
-            A bit about me
+            {about.heading}
           </h2>
         </div>
 
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16">
           {/* Bio */}
           <div className="reveal space-y-4 text-base leading-7 text-zinc-600 dark:text-zinc-400">
-            <p>
-              My name is Matthew Hiebl. I graduated with a Computer Science
-              degree from UNSW in December 2023.
-            </p>
-            <p>
-              I have a passion for building things on the web — from polished
-              user interfaces to the APIs that power them. I enjoy the full
-              stack but have a particular love for frontend work where design
-              and engineering meet.
-            </p>
-            <p>
-              When I&apos;m not coding, I&apos;m probably exploring new
-              technologies, working on personal projects, or thinking about the
-              next thing I want to build.
-            </p>
+            {about.bio.map((paragraph, i) => (
+              <p key={i}>{paragraph}</p>
+            ))}
 
             <div className="flex gap-4 pt-2">
               <a
@@ -125,14 +102,14 @@ export function AboutSection() {
           {/* Skills */}
           <div className="reveal">
             <h3 className="mb-5 text-sm font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
-              Technologies I work with
+              {about.technologies.heading}
             </h3>
             <div
               className="flex flex-wrap gap-2"
               role="list"
               aria-label="Skills"
             >
-              {SKILLS.map(skill => (
+              {about.technologies.skills.map(skill => (
                 <span
                   key={skill}
                   role="listitem"

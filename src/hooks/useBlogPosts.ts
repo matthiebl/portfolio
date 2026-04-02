@@ -1,10 +1,8 @@
 import {
   collection,
-  onSnapshot,
+  getDocs,
   orderBy,
   query,
-  where,
-  type QueryConstraint,
 } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
 import { useAdmin } from '../context/AdminContext'
@@ -13,6 +11,7 @@ import type { BlogPost } from '../types'
 
 interface UseBlogPostsOptions {
   featuredOnly?: boolean
+  excludeFeatured?: boolean
 }
 
 interface UseBlogPostsResult {
@@ -23,6 +22,7 @@ interface UseBlogPostsResult {
 
 export function useBlogPosts({
   featuredOnly = false,
+  excludeFeatured = false,
 }: UseBlogPostsOptions = {}): UseBlogPostsResult {
   const { isAdmin } = useAdmin()
   const [posts, setPosts] = useState<BlogPost[]>([])
@@ -30,33 +30,32 @@ export function useBlogPosts({
   const [error, setError] = useState<Error | null>(null)
 
   useEffect(() => {
-    const constraints: QueryConstraint[] = [orderBy('createdAt', 'desc')]
+    let cancelled = false
 
-    if (!isAdmin) {
-      constraints.unshift(where('published', '==', true))
-    }
-    if (featuredOnly) {
-      constraints.unshift(where('featured', '==', true))
-    }
+    const q = query(collection(db, 'blog_posts'), orderBy('createdAt', 'desc'))
 
-    const q = query(collection(db, 'blog_posts'), ...constraints)
-
-    const unsubscribe = onSnapshot(
-      q,
-      snapshot => {
-        setPosts(
-          snapshot.docs.map(d => ({ id: d.id, ...d.data() }) as BlogPost),
+    getDocs(q)
+      .then(snapshot => {
+        if (cancelled) return
+        let results = snapshot.docs.map(
+          d => ({ id: d.id, ...d.data() }) as BlogPost,
         )
+        if (!isAdmin) results = results.filter(p => p.published)
+        if (featuredOnly) results = results.filter(p => p.featured)
+        if (excludeFeatured) results = results.filter(p => !p.featured)
+        setPosts(results)
         setLoading(false)
-      },
-      err => {
+      })
+      .catch(err => {
+        if (cancelled) return
         setError(err)
         setLoading(false)
-      },
-    )
+      })
 
-    return unsubscribe
-  }, [isAdmin, featuredOnly])
+    return () => {
+      cancelled = true
+    }
+  }, [isAdmin, featuredOnly, excludeFeatured])
 
   return { posts, loading, error }
 }

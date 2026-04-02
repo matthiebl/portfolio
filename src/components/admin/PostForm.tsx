@@ -1,11 +1,8 @@
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import type { Timestamp } from 'firebase/firestore'
 import { useEffect, useRef, useState } from 'react'
-import {
-  createBlogPost,
-  saveBlogPostImages,
-  updateBlogPost,
-} from '../../lib/firestore'
+import { createBlogPost, updateBlogPost } from '../../lib/firestore'
+import { uploadImage } from '../../lib/blobUpload'
 import type { BlogPost } from '../../types'
 import { ImageUploader } from './ImageUploader'
 
@@ -28,10 +25,8 @@ interface FormState {
   content: string
   previewLines: number
   tags: string
-  thumbLight: string
-  thumbDark: string
-  coverLight: string
-  coverDark: string
+  imageLight: string
+  imageDark: string
   featured: boolean
   published: boolean
 }
@@ -45,12 +40,8 @@ function initialState(post?: BlogPost): FormState {
       content: post.content,
       previewLines: post.previewLines ?? 0,
       tags: post.tags.join(', '),
-      thumbLight: post.thumbLight ?? '',
-      thumbDark: post.thumbDark ?? '',
-      // Cover images live in a separate doc; the form doesn't pre-load them.
-      // They will only be overwritten if the user uploads a new image.
-      coverLight: '',
-      coverDark: '',
+      imageLight: post.imageLight ?? '',
+      imageDark: post.imageDark ?? '',
       featured: post.featured,
       published: post.published,
     }
@@ -62,10 +53,8 @@ function initialState(post?: BlogPost): FormState {
     content: '',
     previewLines: 0,
     tags: '',
-    thumbLight: '',
-    thumbDark: '',
-    coverLight: '',
-    coverDark: '',
+    imageLight: '',
+    imageDark: '',
     featured: false,
     published: false,
   }
@@ -75,6 +64,8 @@ export function PostForm({ post, onClose }: PostFormProps) {
   const [form, setForm] = useState<FormState>(() => initialState(post))
   const [slugManuallyEdited, setSlugManuallyEdited] = useState(!!post)
   const [saving, setSaving] = useState(false)
+  const [uploadingLight, setUploadingLight] = useState(false)
+  const [uploadingDark, setUploadingDark] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
   const firstInputRef = useRef<HTMLInputElement>(null)
@@ -93,6 +84,26 @@ export function PostForm({ post, onClose }: PostFormProps) {
       title: value,
       ...(slugManuallyEdited ? {} : { slug: slugify(value) }),
     }))
+  }
+
+  const handleUpload = async (variant: 'light' | 'dark', file: File) => {
+    const setUploading = variant === 'light' ? setUploadingLight : setUploadingDark
+    const field = variant === 'light' ? 'imageLight' : 'imageDark'
+    setUploading(true)
+    try {
+      const url = await uploadImage(file, variant, form.slug || 'draft')
+      setForm(f => ({ ...f, [field]: url }))
+    } catch (e) {
+      setError('Image upload failed. Please try again.')
+      console.error(e)
+    } finally {
+      setUploading(false)
+    }
+  }
+
+  const handleClear = (variant: 'light' | 'dark') => {
+    const field = variant === 'light' ? 'imageLight' : 'imageDark'
+    setForm(f => ({ ...f, [field]: '' }))
   }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -118,8 +129,8 @@ export function PostForm({ post, onClose }: PostFormProps) {
         .split(',')
         .map(t => t.trim())
         .filter(Boolean),
-      thumbLight: form.thumbLight,
-      thumbDark: form.thumbDark,
+      imageLight: form.imageLight,
+      imageDark: form.imageDark,
       featured: form.featured,
       published: form.published,
       publishedAt: (form.published && !post?.publishedAt
@@ -128,20 +139,10 @@ export function PostForm({ post, onClose }: PostFormProps) {
     }
 
     try {
-      let id: string
       if (isEditing) {
         await updateBlogPost(post.id, postData)
-        id = post.id
       } else {
-        id = await createBlogPost(postData)
-      }
-
-      // Save cover images if any were uploaded this session
-      if (form.coverLight || form.coverDark) {
-        await saveBlogPostImages(id, {
-          ...(form.coverLight ? { coverLight: form.coverLight } : {}),
-          ...(form.coverDark ? { coverDark: form.coverDark } : {}),
-        })
+        await createBlogPost(postData)
       }
 
       setSuccess(true)
@@ -303,28 +304,22 @@ export function PostForm({ post, onClose }: PostFormProps) {
           {/* Images */}
           <div className="space-y-3">
             <p className="text-xs font-medium text-zinc-700 dark:text-zinc-300">
-              Cover images{' '}
-              <span className="font-normal text-zinc-400">
-                — one upload generates a card thumbnail and a full cover
-                automatically
-              </span>
+              Cover images
             </p>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <ImageUploader
                 label="Light mode"
-                thumbValue={form.thumbLight}
-                coverValue={form.coverLight}
-                onChange={({ thumb, cover }) =>
-                  setForm(f => ({ ...f, thumbLight: thumb, coverLight: cover }))
-                }
+                url={form.imageLight}
+                uploading={uploadingLight}
+                onUpload={file => handleUpload('light', file)}
+                onClear={() => handleClear('light')}
               />
               <ImageUploader
                 label="Dark mode"
-                thumbValue={form.thumbDark}
-                coverValue={form.coverDark}
-                onChange={({ thumb, cover }) =>
-                  setForm(f => ({ ...f, thumbDark: thumb, coverDark: cover }))
-                }
+                url={form.imageDark}
+                uploading={uploadingDark}
+                onUpload={file => handleUpload('dark', file)}
+                onClear={() => handleClear('dark')}
               />
             </div>
           </div>

@@ -1,3 +1,5 @@
+import { hero } from '../../content'
+
 function scrollTo(id: string) {
   document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
 }
@@ -32,20 +34,19 @@ export function HeroSection() {
       <div className="relative w-full px-6 py-24 lg:px-10">
         <div className="mx-auto max-w-7xl">
           <p className="animate-fade-up font-mono text-sm font-medium tracking-widest text-indigo-600 dark:text-indigo-400 uppercase mb-4">
-            Hey there, I&apos;m
+            {hero.greeting}
           </p>
           <h1
             id="hero-heading"
             className="animate-fade-up-delay-1 text-5xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-7xl lg:text-8xl"
           >
-            Matthew Hiebl
+            {hero.name}
           </h1>
           <p className="animate-fade-up-delay-2 mt-4 text-2xl font-semibold text-zinc-500 dark:text-zinc-400 sm:text-3xl">
-            Software Engineer
+            {hero.role}
           </p>
           <p className="animate-fade-up-delay-3 mt-6 max-w-xl text-base leading-7 text-zinc-600 dark:text-zinc-400 sm:text-lg">
-            I enjoy all aspects of web development and have a passion for
-            turning ideas into usable, responsive, and well-crafted websites.
+            {hero.description}
           </p>
 
           <div className="animate-fade-up-delay-4 mt-10 flex flex-wrap gap-4">
@@ -53,7 +54,7 @@ export function HeroSection() {
               onClick={() => scrollTo('showcase')}
               className="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all hover:bg-indigo-500 hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
-              Explore my work
+              {hero.cta.work}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 20 20"
@@ -72,7 +73,7 @@ export function HeroSection() {
               onClick={() => scrollTo('blog')}
               className="inline-flex items-center gap-2 rounded-xl border border-zinc-300 bg-white px-6 py-3 text-sm font-semibold text-zinc-700 shadow-sm transition-all hover:border-zinc-400 hover:bg-zinc-50 hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:border-zinc-500 dark:hover:bg-zinc-800"
             >
-              Read my blog
+              {hero.cta.blog}
             </button>
           </div>
         </div>

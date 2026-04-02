@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { blog } from '../../content'
 import { useAdmin } from '../../context/AdminContext'
 import { useBlogPosts } from '../../hooks/useBlogPosts'
 import { PostForm } from '../admin/PostForm'
@@ -22,14 +23,16 @@ function CardSkeleton() {
 
 export function BlogSection() {
   const { isAdmin } = useAdmin()
-  const { posts, loading } = useBlogPosts()
+  const { posts, loading } = useBlogPosts({ excludeFeatured: true })
   const [addingNew, setAddingNew] = useState(false)
   const sectionRef = useRef<HTMLElement>(null)
+  const isVisibleRef = useRef(false)
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       entries => {
         entries.forEach(entry => {
+          isVisibleRef.current = entry.isIntersecting
           if (entry.isIntersecting) {
             entry.target
               .querySelectorAll('.reveal')
@@ -43,6 +46,14 @@ export function BlogSection() {
     return () => observer.disconnect()
   }, [])
 
+  useEffect(() => {
+    if (!loading && isVisibleRef.current && sectionRef.current) {
+      sectionRef.current
+        .querySelectorAll('.reveal')
+        .forEach(el => el.classList.add('visible'))
+    }
+  }, [loading])
+
   return (
     <section
       id="blog"
@@ -54,16 +65,16 @@ export function BlogSection() {
         <div className="reveal mb-12 flex items-end justify-between">
           <div>
             <p className="font-mono text-xs font-semibold tracking-widest text-indigo-600 dark:text-indigo-400 uppercase mb-3">
-              Writing
+              {blog.label}
             </p>
             <h2
               id="blog-heading"
               className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-4xl"
             >
-              From the blog
+              {blog.heading}
             </h2>
             <p className="mt-3 text-base text-zinc-500 dark:text-zinc-400">
-              Thoughts, projects, and things I&apos;ve learned along the way.
+              {blog.subtitle}
             </p>
           </div>
 
@@ -86,9 +97,7 @@ export function BlogSection() {
         ) : posts.length === 0 ? (
           <div className="flex h-48 items-center justify-center rounded-2xl border border-dashed border-zinc-300 dark:border-zinc-700">
             <p className="text-sm text-zinc-400">
-              {isAdmin
-                ? 'No posts yet. Create one above.'
-                : 'Nothing published yet.'}
+              {isAdmin ? blog.empty.admin : blog.empty.public}
             </p>
           </div>
         ) : (

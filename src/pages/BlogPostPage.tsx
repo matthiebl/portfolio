@@ -6,8 +6,8 @@ import rehypeHighlight from 'rehype-highlight'
 import { PostForm } from '../components/admin/PostForm'
 import { useAdmin } from '../context/AdminContext'
 import { useTheme } from '../context/ThemeContext'
-import { getBlogPostBySlug, getBlogPostImages } from '../lib/firestore'
-import type { BlogPost, BlogPostImages } from '../types'
+import { getBlogPostBySlug } from '../lib/firestore'
+import type { BlogPost } from '../types'
 
 export default function BlogPostPage() {
   const { slug } = useParams<{ slug: string }>()
@@ -15,7 +15,6 @@ export default function BlogPostPage() {
   const { isAdmin } = useAdmin()
   const { theme } = useTheme()
   const [post, setPost] = useState<BlogPost | null>(null)
-  const [images, setImages] = useState<BlogPostImages>({})
   const [loading, setLoading] = useState(true)
   const [notFound, setNotFound] = useState(false)
   const [editing, setEditing] = useState(false)
@@ -28,15 +27,12 @@ export default function BlogPostPage() {
     if (!slug) return
     setLoading(true)
     getBlogPostBySlug(slug)
-      .then(async result => {
+      .then(result => {
         if (!result || (!result.published && !isAdmin)) {
           setNotFound(true)
           return
         }
         setPost(result)
-        // Fetch cover images separately (kept in a lean document)
-        const imgs = await getBlogPostImages(result.id)
-        setImages(imgs)
       })
       .catch(() => setNotFound(true))
       .finally(() => setLoading(false))
@@ -90,14 +86,13 @@ export default function BlogPostPage() {
 
   const coverImage =
     theme === 'dark'
-      ? images.coverDark || images.coverLight
-      : images.coverLight || images.coverDark
+      ? post.imageDark || post.imageLight
+      : post.imageLight || post.imageDark
 
   const publishedDate = post.publishedAt?.toDate?.()
   const dateStr = publishedDate?.toLocaleDateString('en-AU', {
     year: 'numeric',
     month: 'long',
-    day: 'numeric',
   })
 
   return (
@@ -165,8 +160,14 @@ export default function BlogPostPage() {
         </header>
 
         {coverImage && (
-          <div className="mb-8 overflow-hidden rounded-2xl">
-            <img src={coverImage} alt="" className="w-full object-cover" />
+          <div className="relative mb-8 w-screen max-w-7xl left-1/2 -translate-x-1/2 px-6 lg:px-10">
+            <div className="overflow-hidden rounded-2xl">
+              <img
+                src={coverImage}
+                alt=""
+                className="w-full max-h-[60vh] object-cover"
+              />
+            </div>
           </div>
         )}
 

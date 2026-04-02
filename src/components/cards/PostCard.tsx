@@ -21,8 +21,8 @@ export function PostCard({ post, variant = 'default' }: PostCardProps) {
 
   const coverImage =
     theme === 'dark'
-      ? post.thumbDark || post.thumbLight
-      : post.thumbLight || post.thumbDark
+      ? post.imageDark || post.imageLight
+      : post.imageLight || post.imageDark
 
   const preview = (() => {
     if (post.previewLines && post.previewLines > 0) {
@@ -55,7 +55,6 @@ export function PostCard({ post, variant = 'default' }: PostCardProps) {
     ? publishedDate.toLocaleDateString('en-AU', {
         year: 'numeric',
         month: 'short',
-        day: 'numeric',
       })
     : null
 
@@ -64,20 +63,18 @@ export function PostCard({ post, variant = 'default' }: PostCardProps) {
       <article
         aria-label={post.title}
         className={`
-          group relative flex flex-col overflow-hidden rounded-2xl border border-zinc-200 bg-white
+          group relative flex flex-col overflow-hidden rounded-2xl border bg-white
           transition-all duration-200
           hover:shadow-lg hover:-translate-y-0.5
-          dark:border-zinc-800 dark:bg-zinc-900
-          ${variant === 'featured' ? 'ring-1 ring-indigo-200 dark:ring-indigo-900' : ''}
+          dark:bg-zinc-900
+          ${!post.published && isAdmin
+            ? 'border-dashed border-amber-300 opacity-75 dark:border-amber-700'
+            : 'border-zinc-200 dark:border-zinc-800'}
+          ${variant === 'featured' && post.published ? 'ring-1 ring-indigo-200 dark:ring-indigo-900' : ''}
         `}
       >
         {/* Cover image */}
-        <Link
-          to={`/blog/${post.slug}`}
-          tabIndex={-1}
-          aria-hidden="true"
-          className="block aspect-video w-full overflow-hidden bg-zinc-100 dark:bg-zinc-800"
-        >
+        <div className="block aspect-video w-full overflow-hidden bg-zinc-100 dark:bg-zinc-800">
           {coverImage ? (
             <img
               src={coverImage}
@@ -90,17 +87,22 @@ export function PostCard({ post, variant = 'default' }: PostCardProps) {
               <div className="h-12 w-12 rounded-full bg-linear-to-br from-indigo-400 to-purple-500 opacity-40" />
             </div>
           )}
-        </Link>
+        </div>
 
         {/* Content */}
-        <div className="flex flex-1 flex-col p-5">
-          {/* Tags */}
-          {post.tags.length > 0 && (
+        <div className="relative z-10 flex flex-1 flex-col p-5">
+          {/* Tags + draft badge */}
+          {(post.tags.length > 0 || (!post.published && isAdmin)) && (
             <div
               className="mb-3 flex flex-wrap gap-1.5"
               role="list"
               aria-label="Tags"
             >
+              {!post.published && isAdmin && (
+                <span className="rounded-full bg-amber-100 px-2.5 py-0.5 font-mono text-xs font-medium text-amber-700 dark:bg-amber-900/30 dark:text-amber-400">
+                  Draft
+                </span>
+              )}
               {post.tags.slice(0, 3).map(tag => (
                 <span
                   key={tag}
@@ -110,11 +112,6 @@ export function PostCard({ post, variant = 'default' }: PostCardProps) {
                   {tag}
                 </span>
               ))}
-              {!post.published && isAdmin && (
-                <span className="rounded-full bg-amber-100 px-2.5 py-0.5 font-mono text-xs font-medium text-amber-700 dark:bg-amber-900/30 dark:text-amber-400">
-                  Draft
-                </span>
-              )}
             </div>
           )}
 
@@ -122,7 +119,7 @@ export function PostCard({ post, variant = 'default' }: PostCardProps) {
           <h3 className="mb-2 text-base font-semibold leading-snug text-zinc-900 dark:text-zinc-50">
             <Link
               to={`/blog/${post.slug}`}
-              className="focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+              className="after:absolute after:inset-0 after:z-10 after:rounded-2xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
             >
               {post.title}
             </Link>
@@ -146,14 +143,14 @@ export function PostCard({ post, variant = 'default' }: PostCardProps) {
           )}
         </div>
 
-        {/* Admin overlay */}
+        {/* Admin overlay — pointer-events-none so the stretch link stays clickable */}
         {isAdmin && (
           <div
-            className="absolute inset-0 flex items-end justify-end gap-2 p-3 opacity-0 transition-opacity duration-150 group-hover:opacity-100"
+            className="pointer-events-none absolute inset-0 z-20 flex items-end justify-end gap-2 p-3 opacity-0 transition-opacity duration-150 group-hover:opacity-100"
             aria-hidden="true"
           >
             {confirmDelete ? (
-              <div className="flex gap-2">
+              <div className="pointer-events-auto flex gap-2">
                 <button
                   onClick={() => setConfirmDelete(false)}
                   className="rounded-lg bg-white px-3 py-1.5 text-xs font-medium text-zinc-700 shadow-md ring-1 ring-zinc-200 hover:bg-zinc-50 dark:bg-zinc-800 dark:text-zinc-200 dark:ring-zinc-700"
@@ -169,7 +166,7 @@ export function PostCard({ post, variant = 'default' }: PostCardProps) {
                 </button>
               </div>
             ) : (
-              <>
+              <div className="pointer-events-auto flex gap-2">
                 <button
                   onClick={() => setEditing(true)}
                   aria-label={`Edit ${post.title}`}
@@ -184,7 +181,7 @@ export function PostCard({ post, variant = 'default' }: PostCardProps) {
                 >
                   <TrashIcon className="h-4 w-4 text-red-500" />
                 </button>
-              </>
+              </div>
             )}
           </div>
         )}

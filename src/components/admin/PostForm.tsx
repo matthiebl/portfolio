@@ -8,7 +8,7 @@ import { ImageUploader } from './ImageUploader'
 
 interface PostFormProps {
   post?: BlogPost
-  onClose: () => void
+  onClose: (saved?: boolean) => void
 }
 
 function slugify(text: string): string {
@@ -27,6 +27,8 @@ interface FormState {
   tags: string
   imageLight: string
   imageDark: string
+  projectUrl: string
+  publishedDate: string
   featured: boolean
   published: boolean
 }
@@ -42,6 +44,10 @@ function initialState(post?: BlogPost): FormState {
       tags: post.tags.join(', '),
       imageLight: post.imageLight ?? '',
       imageDark: post.imageDark ?? '',
+      projectUrl: post.projectUrl ?? '',
+      publishedDate: post.publishedAt
+        ? post.publishedAt.toDate().toISOString().split('T')[0]
+        : '',
       featured: post.featured,
       published: post.published,
     }
@@ -55,6 +61,8 @@ function initialState(post?: BlogPost): FormState {
     tags: '',
     imageLight: '',
     imageDark: '',
+    projectUrl: '',
+    publishedDate: '',
     featured: false,
     published: false,
   }
@@ -107,7 +115,7 @@ export function PostForm({ post, onClose }: PostFormProps) {
   }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Escape') onClose()
+    if (e.key === 'Escape') onClose(false)
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -133,9 +141,12 @@ export function PostForm({ post, onClose }: PostFormProps) {
       imageDark: form.imageDark,
       featured: form.featured,
       published: form.published,
-      publishedAt: (form.published && !post?.publishedAt
-        ? new Date()
-        : (post?.publishedAt ?? null)) as unknown as Timestamp,
+      ...(form.projectUrl.trim() ? { projectUrl: form.projectUrl.trim() } : {}),
+      publishedAt: (form.publishedDate
+        ? new Date(form.publishedDate + 'T00:00:00')
+        : form.published && !post?.publishedAt
+          ? new Date()
+          : (post?.publishedAt ?? null)) as unknown as Timestamp,
     }
 
     try {
@@ -146,7 +157,7 @@ export function PostForm({ post, onClose }: PostFormProps) {
       }
 
       setSuccess(true)
-      setTimeout(onClose, 800)
+      setTimeout(() => onClose(true), 800)
     } catch (e) {
       setError('Failed to save. Please try again.')
       console.error(e)
@@ -164,7 +175,7 @@ export function PostForm({ post, onClose }: PostFormProps) {
     >
       <div
         className="fixed inset-0 bg-black/50 backdrop-blur-sm"
-        onClick={onClose}
+        onClick={() => onClose()}
         aria-hidden="true"
       />
 
@@ -177,7 +188,7 @@ export function PostForm({ post, onClose }: PostFormProps) {
             {isEditing ? 'Edit post' : 'New post'}
           </h2>
           <button
-            onClick={onClose}
+            onClick={() => onClose()}
             aria-label="Close"
             className="rounded-lg p-1 text-zinc-400 hover:bg-zinc-100 hover:text-zinc-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 dark:hover:bg-zinc-800"
           >
@@ -324,6 +335,41 @@ export function PostForm({ post, onClose }: PostFormProps) {
             </div>
           </div>
 
+          {/* Project URL */}
+          <div>
+            <label
+              htmlFor="pf-project-url"
+              className="mb-1.5 block text-xs font-medium text-zinc-700 dark:text-zinc-300"
+            >
+              Project URL <span className="text-zinc-400">(optional)</span>
+            </label>
+            <input
+              id="pf-project-url"
+              type="url"
+              value={form.projectUrl}
+              onChange={e => set('projectUrl', e.target.value)}
+              className="input-field"
+              placeholder="https://example.com"
+            />
+          </div>
+
+          {/* Published date */}
+          <div>
+            <label
+              htmlFor="pf-published-date"
+              className="mb-1.5 block text-xs font-medium text-zinc-700 dark:text-zinc-300"
+            >
+              Published date <span className="text-zinc-400">(leave blank to auto-set on publish)</span>
+            </label>
+            <input
+              id="pf-published-date"
+              type="date"
+              value={form.publishedDate}
+              onChange={e => set('publishedDate', e.target.value)}
+              className="input-field w-48"
+            />
+          </div>
+
           {/* Toggles */}
           <div className="flex gap-6">
             <label className="flex cursor-pointer items-center gap-2.5">
@@ -367,7 +413,7 @@ export function PostForm({ post, onClose }: PostFormProps) {
           <div className="flex justify-end gap-3 border-t border-zinc-200 pt-4 dark:border-zinc-800">
             <button
               type="button"
-              onClick={onClose}
+              onClick={() => onClose()}
               className="rounded-xl border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
             >
               Cancel

@@ -9,6 +9,7 @@ export interface BlogPost {
   /** Vercel Blob CDN URL — used on cards and post pages */
   imageLight?: string
   imageDark?: string
+  projectUrl?: string
   previewLines?: number
   tags: string[]
   featured: boolean
